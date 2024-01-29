@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   VStack,
   Text,
@@ -6,24 +6,47 @@ import {
   ButtonText,
   View,
   ButtonGroup,
+  Divider,
 } from "@gluestack-ui/themed";
-import { Dimensions } from "react-native";
+import { Alert, Dimensions, FlatList } from "react-native";
 import { useRecoilValue } from "recoil";
 import { cartState } from "../../store/cartStore";
 import { ScrollView } from "@gluestack-ui/themed";
 import { currency } from "../../utils/currency";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { rootStackParamList } from "../../types/rootStackParams";
 
 export default function SideBarCart() {
+  const navigate = useNavigation<NavigationProp<rootStackParamList>>()
+  
+  const [showModal, setShowModal] = useState<boolean>(false)
   const { items, totalPrice } = useRecoilValue(cartState);
+
+  const onPay = () => {
+    Alert.alert('Pembayaran', 'pembayaran dengan tunai', [
+      {
+        text: "Batal",
+
+      },
+      {
+        text: "Bayar",
+        onPress: () => navigate.navigate('pembayaran', { data: { items, totalPrice } })
+      },
+
+    ],
+      {
+        cancelable: true
+      }
+    )
+  }
 
   const price = currency.format(totalPrice);
 
-  const dimension = Dimensions.get("window");
   return (
     <VStack
       w={"$80"}
-      bgColor="$blue300"
-      minHeight={dimension.height - 32 - 80}
+      bgColor="$white"
+      // h={dimension.height - 32 - 80}
       p={"$4"}
       rounded={"$md"}
       m={16}
@@ -35,43 +58,37 @@ export default function SideBarCart() {
           flexDirection="row"
           justifyContent="space-between"
         >
-          <View>
-            <Text>Nama</Text>
-          </View>
-          <View w="50%" flexDirection="row" justifyContent="space-between">
-            <Text>Qty</Text>
-            <Text>Total</Text>
-          </View>
+
+          <Text flex={1}>Nama</Text>
+          <Text flex={1}>Qty</Text>
+          <Text flex={1}>Total</Text>
+
         </View>
-        <ScrollView>
-          {items?.map((item) => (
+        <FlatList
+          data={items}
+          ItemSeparatorComponent={() => <Divider />}
+          renderItem={({ item }) => (
             <View
+              py={"$2"}
               key={item.id}
               flexDirection="row"
               justifyContent="space-between"
             >
-              <View>
-                <Text>{item.name}</Text>
-              </View>
-              <View w="50%" flexDirection="row" justifyContent="space-between">
-                <Text>{item.total}</Text>
-                <Text>{item.price * item.total}</Text>
-              </View>
+              <Text flex={1}>{item.name}</Text>
+              <Text flex={1}>{item.total}</Text>
+              <Text flex={1}>{item.price * item.total}</Text>
             </View>
-          ))}
-        </ScrollView>
+          )} />
+
       </VStack>
       <View>
         <Text>Total : {price}</Text>
-          <Button
-            mt={16}
-            bg="$blue700"
-            $active-bgColor="$blue800"
-            onPress={() => alert("halo")}
-            w={"100%"}
-          >
-            <ButtonText>Save</ButtonText>
-          </Button>
+        <Button $active-bg="$orange500" bgColor="$orange" onPress={onPay}>
+          <ButtonText>
+            Save
+          </ButtonText>
+        </Button>
+        {/* <Pop showModal={showModal} setShowModal={setShowModal} /> */}
       </View>
     </VStack>
   );

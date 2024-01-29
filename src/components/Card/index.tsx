@@ -14,15 +14,15 @@ import { item } from "../../types/data";
 import { currency } from "../../utils/currency";
 import { useSetRecoilState } from "recoil";
 import { cartState } from "../../store/cartStore";
-import { cartItem } from "../../types";
+import { cartItem, menu } from "../../types";
 
 interface props {
-  data: item;
+  data: menu;
 }
 
 const Card = ({ data }: props) => {
   const setCart = useSetRecoilState(cartState);
-  let longPressTimeOut : NodeJS.Timeout;
+  let longPressTimeOut: NodeJS.Timeout;
 
   const addItem = () => {
     setCart((cart) => {
@@ -58,30 +58,30 @@ const Card = ({ data }: props) => {
 
       let updateItem: cartItem[] = items;
       let totalPrice = cart.totalPrice;
-      
-      if (findItem && findItem.total > 1) {
 
+      if (findItem && findItem.total > 1) {
         updateItem = items.map((item) =>
           item.id === data.id ? { ...item, total: item.total - 1 } : item
         );
         totalPrice -= data.price;
-
       } else if (findItem && findItem.total === 1) {
-
         updateItem = items.filter((item) => item.id !== data.id);
         totalPrice -= data.price;
-      
       }
 
       return { totalPrice, items: updateItem };
     });
   };
 
-
-  const handleLongPress = () => {
-    longPressTimeOut = setInterval(() => {
-      addItem();
-    }, 100); // Ganti angka 100 dengan interval yang diinginkan (dalam milidetik)
+  const handleLongPress = (condition: "add" | "delete") => {
+    if (condition === "add")
+      longPressTimeOut = setInterval(() => {
+        addItem();
+      }, 100);
+    else
+      longPressTimeOut = setInterval(() => {
+        decreaseItem();
+      }, 100);
   };
 
   const handleLongPressEnd = () => {
@@ -90,12 +90,13 @@ const Card = ({ data }: props) => {
 
   return (
     <Box
-      maxWidth="$64"
+      maxWidth="$48"
       minWidth={"$48"}
       borderColor="$borderLight200"
       borderRadius="$lg"
       borderWidth="$1"
       overflow="hidden"
+      bgColor="$white"
       sx={{
         _dark: {
           bg: "$backgroundDark900",
@@ -108,7 +109,7 @@ const Card = ({ data }: props) => {
           h={150}
           w="100%"
           source={{
-            uri: data.img,
+            uri: data.image,
           }}
           alt="image"
         />
@@ -132,15 +133,23 @@ const Card = ({ data }: props) => {
           {currency.format(data.price)}
         </Text>
         <ButtonGroup justifyContent="space-between">
-          <Button onLongPress={(e) => {
-            const interval = setInterval(() => {
-              
-            })
-          }} onPress={decreaseItem} bgColor="$red600" $active-bg="$red800">
+          <Button
+            onLongPress={() => handleLongPress("delete")}
+            onPressOut={handleLongPressEnd}
+            onPress={decreaseItem}
+            bgColor="$orange"
+            $active-bg="$orange500"
+          >
             <ButtonText>-</ButtonText>
           </Button>
 
-          <Button onLongPress={handleLongPress} onPressOut={handleLongPressEnd}  onPress={addItem}>
+          <Button
+            onLongPress={() => handleLongPress("add")}
+            onPressOut={handleLongPressEnd}
+            onPress={addItem}
+            bgColor="orange"
+            $active-bg="$orange500"
+          >
             <ButtonText>+</ButtonText>
           </Button>
         </ButtonGroup>
@@ -148,6 +157,5 @@ const Card = ({ data }: props) => {
     </Box>
   );
 };
-// additional item
 
 export default Card;

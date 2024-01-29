@@ -1,4 +1,4 @@
-import { GluestackUIProvider, createConfig } from "@gluestack-ui/themed";
+import { GluestackUIProvider } from "@gluestack-ui/themed";
 import { config } from "@gluestack-ui/config";
 import MainRoute from "./src/router/MainRoute";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -16,7 +16,7 @@ export default function App() {
     landscape();
   }, []);
   return (
-    <GluestackUIProvider config={config}>
+    <GluestackUIProvider config={config} >
       <MainRoute />
     </GluestackUIProvider>
   );

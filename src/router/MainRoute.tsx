@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import {
   CardStyleInterpolators,
   StackNavigationOptions,
@@ -12,10 +12,13 @@ import * as Font from "expo-font";
 import DashboardScreen from "../screens/Drawer/DashboardScreen";
 import { rootStackParamList } from "../types/rootStackParams";
 import DrawerRoute from "./DrawerRoute";
+import DetailTransactionScreen from "../screens/DetailTransactionScreen";
+import PembayaranScreen from "../screens/PembayaranScreen";
 
 const Stack = createStackNavigator<rootStackParamList>();
 
 const MainRoute = () => {
+  const [token, setToken] = useState<string | null>('')
   const headerOption: StackNavigationOptions = {
     headerShown: false,
   };
@@ -24,7 +27,18 @@ const MainRoute = () => {
       <Stack.Navigator
         screenOptions={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          headerStyle: {
+            backgroundColor: "#fb923c",
+          },
+          headerBackTitleStyle: {
+            color: "white"
+          },
+          headerTitleStyle: {
+            color: "white"
+          },
+          headerTintColor: "white"
         }}
+
       >
         <Stack.Screen
           options={headerOption}
@@ -36,8 +50,19 @@ const MainRoute = () => {
           name="main"
           component={DrawerRoute}
         />
+        <Stack.Screen
+          options={{ cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid, }}
 
-        {/* <Stack.Screen name='splash' component={SplashScreen} /> */}
+          name="detail"
+          component={DetailTransactionScreen}
+        />
+        <Stack.Screen
+          options={{ cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid, }}
+
+          name="pembayaran"
+          component={PembayaranScreen}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

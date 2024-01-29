@@ -9,9 +9,13 @@ import {
   View,
 } from "@gluestack-ui/themed";
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { rootStackParamList } from "../types/rootStackParams";
 import { StackNavigationProp } from "@react-navigation/stack";
+import axios, { AxiosError } from "axios";
+import { loginResponse } from "../types";
+import { getItem, setItem } from "../utils/storage";
+import { ActivityIndicator } from "react-native";
 
 interface form {
   username: string;
@@ -21,10 +25,12 @@ interface form {
 type loginScreeProp = StackNavigationProp<rootStackParamList, "login">;
 
 export default function LoginScreen() {
+  const BASE_API = process.env.EXPO_PUBLIC_BASE_API || "https://api-cafe-ukk.vercel.app/v1";
   const [form, setForm] = useState<form>({
     password: "",
     username: "",
   });
+  const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigation<loginScreeProp>();
 
@@ -35,22 +41,60 @@ export default function LoginScreen() {
     }));
   };
 
-  const onClick = () => {
-    if (form.username !== "admin" && form.password !== "admin") {
-      alert("password atau username tidak sesuai");
-    } else {
-      navigate.navigate("main");
+  const onSubmit = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post<loginResponse>(
+        `${BASE_API}/auth/login`,
+        form
+      );
+      console.log(response.data.data);
+
+      const name = setItem("name", response.data.data.name);
+      const id = setItem("id", response.data.data.id);
+      const username = setItem("username", response.data.data.username);
+      const photo = setItem("photo", response.data.data.image);
+      const token = setItem("token", response.data.data.token);
+      const tokenExpires = setItem("expires", response.data.data.expires);
+      await Promise.all([token, name, username, photo, id, tokenExpires]);
+
+      alert(response.data.message);
+      setLoading(false);
+
+      navigate.replace("main");
+    } catch (error) {
+      console.log(error);
+
+      setLoading(false);
+
+      if (error instanceof AxiosError) {
+        console.log(error);
+
+        alert(error.response?.data.message[0]);
+      } else {
+        alert("error di internal server");
+      }
     }
   };
 
+  const checkToken = async () => {
+    const token = await getItem('token') || null
+    if (token) {
+      navigate.replace('main')
+    }
+  }
+  useEffect(() => {
+    checkToken()
+  }, [])
+
   return (
-    <VStack flex={1} justifyContent="center" alignItems="center">
-      <Box bg="$darkBlue900" p={16} rounded={"$lg"} gap={16}>
+    <VStack flex={1} justifyContent="center" backgroundColor="$orange300" alignItems="center">
+      <Box bg="$orange50" p={16} rounded={"$lg"} gap={16}>
         <Text
           size="4xl"
           fontWeight="$semibold"
           textAlign="center"
-          color="$white"
+          color="$black"
         >
           Log In
         </Text>
@@ -66,7 +110,7 @@ export default function LoginScreen() {
             placeholder="username"
             fontWeight="$light"
             w={"$6"}
-            color="$white"
+            color="$black"
             onChangeText={(e) => onChange(e, "username")}
           />
         </Input>
@@ -82,19 +126,22 @@ export default function LoginScreen() {
             type="password"
             placeholder="password"
             fontWeight="$light"
-            color="$white"
+            color="$black"
             w={"$6"}
             onChangeText={(e) => onChange(e, "password")}
           />
         </Input>
 
         <Button
-          onPress={() => onClick()}
+          onPress={() => onSubmit()}
           mt={"$4"}
-          bg="$blue700"
-          $active-bgColor="$blue800"
+          bg="$orange500"
+          $active-bgColor="$orange600"
+          disabled={loading}
         >
-          <ButtonText>Submit</ButtonText>
+          <ButtonText alignItems="center">
+            {loading ? <ActivityIndicator color={"white"} /> : "Submit"}
+          </ButtonText>
         </Button>
       </Box>
     </VStack>
