@@ -68,9 +68,9 @@ export default function LoginScreen() {
       setLoading(false);
 
       if (error instanceof AxiosError) {
-        console.log(error);
+        console.log(error.response?.data.message);
 
-        alert(error.response?.data.message[0]);
+        alert(error.response?.data.message);
       } else {
         alert("error di internal server");
       }

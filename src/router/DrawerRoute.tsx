@@ -8,11 +8,14 @@ import React, { useEffect, useState } from "react";
 import DashboardScreen from "../screens/Drawer/DashboardScreen";
 import { Image } from "@gluestack-ui/themed";
 import SettingScreen from "../screens/Drawer/SettingScreen";
-import { useIsFocused } from "@react-navigation/native";
+import { NavigationProp, useIsFocused, useNavigation } from "@react-navigation/native";
 import TransactionScrenn from "../screens/Drawer/TransactionScreen";
 import { rootStackDrawerList } from "../types";
 import { Alert } from "react-native";
 import { getItem } from "../utils/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { rootStackParamList } from "../types/rootStackParams";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 const Drawer = createDrawerNavigator<rootStackDrawerList>();
 
@@ -46,6 +49,7 @@ function DrawerContent({
 }: DrawerContentComponentProps): React.ReactNode {
   const [photo, setPhoto] = useState<null | string>(null)
   const [name, setName] = useState<null | string>(null)
+  const navigate = useNavigation<StackNavigationProp<rootStackParamList, "main">>()
   const focus = useIsFocused();
 
   const getUser = async () => {
@@ -133,6 +137,21 @@ function DrawerContent({
             <Text
               color="$amber50"
               textTransform="capitalize"
+              onPress={() => {
+                Alert.alert("yakin logout?", "kamu akan logout lo!", [
+                  {
+                    text: "ya",
+                    onPress: async () => {
+                      await AsyncStorage.clear();
+                      navigate.replace("login");
+                    }
+                  },
+                  {
+                    text: "batal"
+                  }
+                ]
+                )
+              }}
             >
               Logout
             </Text>

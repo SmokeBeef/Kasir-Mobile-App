@@ -46,7 +46,7 @@ export default function Dashboard() {
       <HStack flexWrap="wrap" gap={"$4"}>
 
         {menu.map((value, index) =>
-          <Card data={value} />
+          <Card key={value.id} data={value} />
         )}
 
       </HStack>

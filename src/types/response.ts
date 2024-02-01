@@ -132,7 +132,7 @@ type User = {
   created_at: string;
 };
 
-type PemesananById = {
+export type PemesananById = {
   id: number;
   customer_name: string;
   total: number;

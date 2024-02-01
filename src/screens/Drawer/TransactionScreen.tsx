@@ -137,7 +137,7 @@ export default function TransactionScreen() {
 
   const RenderItem = ({ item, index }: ListRenderItemInfo<pemesananDetail>) => {
     return (
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 16, paddingVertical: 8, paddingHorizontal: 12 }} >
+      <View bgColor="white" style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 16, paddingVertical: 8, paddingHorizontal: 12 }} >
 
         <Text flex={0.3}>{index + 1}</Text>
         <Text flex={1}>{item.id}</Text>
@@ -159,7 +159,7 @@ export default function TransactionScreen() {
   }
 
   return (
-    <VStack flex={1}>
+    <VStack flex={1} bgColor="$orange100">
       {/* <HStack w={"$full"}>
         <Text bgColor="$orange400" color="$white" w={"$full"} >Transaction List</Text>
       </HStack> */}
