@@ -12,7 +12,7 @@ import {
 import React from "react";
 import { item } from "../../types/data";
 import { currency } from "../../utils/currency";
-import { useSetRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilValue } from "recoil";
 import { cartState } from "../../store/cartStore";
 import { cartItem, menu } from "../../types";
 
@@ -22,15 +22,21 @@ interface props {
 
 const Card = ({ data }: props) => {
   const setCart = useSetRecoilState(cartState);
+  const { items } = useRecoilValue(cartState);
+  const findItem = items.find((item) => item.id === data.id); // buat nyari data di cart recoil apakah ada yang sama dengan data yang pengen ditambah
+  // console.log(" item",items);
+  // console.log("find item",findItem);
+
   let longPressTimeOut: NodeJS.Timeout;
 
   const addItem = () => {
     setCart((cart) => {
       const items = cart.items;
-      const findItem = cart.items.find((item) => item.id === data.id);
-      console.log(findItem);
+      const findItem = cart.items.find((item) => item.id === data.id); // buat nyari data di cart recoil apakah ada yang sama dengan data yang pengen ditambah
+      // console.log(findItem);
 
       if (!findItem) {
+        // kalau semisal gaada menu yang sama kaya di penyimpanan,maka dia akan nambahin baru
         const newItem = {
           id: data.id,
           name: data.name,
@@ -41,8 +47,10 @@ const Card = ({ data }: props) => {
         return { totalPrice, items: [...items, newItem] };
       }
 
-      const updateItem = items.map((item) =>
-        item.id === data.id ? { ...item, total: item.total + 1 } : item
+      const updateItem = items.map(
+        (
+          item // ini kalau semisal ternyata menunya sudah ada di penyimpanan recoilnya maka tinggal nambahin jumlah aja
+        ) => (item.id === data.id ? { ...item, total: item.total + 1 } : item)
       );
       const totalPrice = cart.totalPrice + findItem.price;
 
@@ -54,7 +62,6 @@ const Card = ({ data }: props) => {
     setCart((cart) => {
       const items = cart.items;
       const findItem = cart.items.find((item) => item.id === data.id);
-      console.log(findItem);
 
       let updateItem: cartItem[] = items;
       let totalPrice = cart.totalPrice;
@@ -65,7 +72,7 @@ const Card = ({ data }: props) => {
         );
         totalPrice -= data.price;
       } else if (findItem && findItem.total === 1) {
-        updateItem = items.filter((item) => item.id !== data.id);
+        updateItem = items.filter((item) => item.id !== data.id); // disini dia ngefilter kalau semisal datanya ga sama kaya data yang dimasukin/yg pengen dihapus,dia akan masuk ke penyimpanan
         totalPrice -= data.price;
       }
 
@@ -90,13 +97,16 @@ const Card = ({ data }: props) => {
 
   return (
     <Box
+      hardShadow="1"
       maxWidth="$48"
       minWidth={"$48"}
-      borderColor="$borderLight200"
+      // borderColor="$borderLight200"
       borderRadius="$lg"
-      borderWidth="$1"
+      // borderWidth="$1"
       overflow="hidden"
       bgColor="$white"
+      ml={15}
+      mt={5}
       sx={{
         _dark: {
           bg: "$backgroundDark900",
@@ -115,24 +125,74 @@ const Card = ({ data }: props) => {
         />
       </Box>
       <VStack px="$6" pt="$4" pb="$6">
-        <Heading
+        <Text
+          sx={{
+            _dark: { color: "$textLight200" },
+            color: "black", // Atur warna teks menjadi hitam
+          }}
+          size="md"
+        >
+          {data.name.charAt(0).toUpperCase() + data.name.slice(1)}
+        </Text>
+        <Text
+          my="$0.5"
           sx={{
             _dark: { color: "$textLight200" },
           }}
-          size="sm"
+          fontSize="$sm"
         >
-          {data.name}
-        </Heading>
+          {data.description}
+        </Text>
         <Text
-          my="$1.5"
+          mb="$1.5"
           sx={{
             _dark: { color: "$textLight200" },
+            fontWeight: "bold",
+            color: "black",
           }}
           fontSize="$xs"
         >
           {currency.format(data.price)}
         </Text>
-        <ButtonGroup justifyContent="space-between">
+
+
+        {items && findItem ? (
+          <ButtonGroup justifyContent="space-between">
+            <Button
+              onLongPress={() => handleLongPress("delete")}
+              onPressOut={handleLongPressEnd}
+              onPress={decreaseItem}
+              bgColor="white"
+              borderWidth="$2"
+              borderColor="orange"
+              borderRadius={10}
+           
+            >
+              <ButtonText color="orange">-</ButtonText>
+            </Button>
+
+            <Text mt={5}>{findItem.total}</Text>
+
+            <Button
+              onLongPress={() => handleLongPress("add")}
+              onPressOut={handleLongPressEnd}
+              onPress={addItem}
+              bgColor="white"
+              borderWidth="$2"
+              borderColor="orange"
+              borderRadius={10}
+              
+            >
+              <ButtonText color="orange">+</ButtonText>
+            </Button>
+          </ButtonGroup>
+        ) : (
+          <Button onPress={addItem} bgColor="orange" active-bg="#FFA500">
+            <ButtonText>Add</ButtonText>
+          </Button>
+        )}
+
+        {/* <ButtonGroup justifyContent="space-between">
           <Button
             onLongPress={() => handleLongPress("delete")}
             onPressOut={handleLongPressEnd}
@@ -152,7 +212,7 @@ const Card = ({ data }: props) => {
           >
             <ButtonText>+</ButtonText>
           </Button>
-        </ButtonGroup>
+        </ButtonGroup> */}
       </VStack>
     </Box>
   );

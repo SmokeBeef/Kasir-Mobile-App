@@ -42,8 +42,8 @@ export default function Dashboard() {
   return (
     <ScrollView 
     refreshControl={<RefreshControl refreshing={loading} onRefresh={getMenu} />}
-    w={"auto"} p={"$4"} gap={"$4"}>
-      <HStack flexWrap="wrap" gap={"$4"}>
+    w={"auto"} p={"$4"} gap={"$4"}  >
+      <HStack flexWrap="wrap" gap={"$4"} mb={30}>
 
         {menu.map((value, index) =>
           <Card key={value.id} data={value} />

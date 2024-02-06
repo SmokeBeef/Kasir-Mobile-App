@@ -9,7 +9,7 @@ import { RecoilRoot } from "recoil";
 export default function DashboardScreen() {
   return (
     <RecoilRoot >
-      <VStack bgColor="$orange100" flex={1} w={"$full"} flexDirection="row" justifyContent="space-between">
+      <VStack bgColor="$orange100" flex={1} w={"$full"} flexDirection="row" justifyContent="space-between" >
         <Dashboard />
         <SideBarCart />
       </VStack>
