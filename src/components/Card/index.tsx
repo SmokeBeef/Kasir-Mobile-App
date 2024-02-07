@@ -15,6 +15,7 @@ import { currency } from "../../utils/currency";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { cartState } from "../../store/cartStore";
 import { cartItem, menu } from "../../types";
+import { useFonts } from "expo-font";
 
 interface props {
   data: menu;
@@ -28,6 +29,12 @@ const Card = ({ data }: props) => {
   // console.log("find item",findItem);
 
   let longPressTimeOut: NodeJS.Timeout;
+
+  let [fontsLoaded] = useFonts({
+    'PTSerifReg' : require('../../../assets/font/PTSerif-Regular.ttf'),
+    'PTSerif-Bold' : require('../../../assets/font/PTSerif-Bold.ttf')
+
+  })
 
   const addItem = () => {
     setCart((cart) => {
@@ -131,6 +138,7 @@ const Card = ({ data }: props) => {
             color: "black", // Atur warna teks menjadi hitam
           }}
           size="md"
+          fontFamily="PTSerif-Bold"
         >
           {data.name.charAt(0).toUpperCase() + data.name.slice(1)}
         </Text>
