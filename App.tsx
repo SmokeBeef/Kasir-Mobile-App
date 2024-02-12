@@ -4,6 +4,7 @@ import MainRoute from "./src/router/MainRoute";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useEffect } from "react";
 import 'react-native-gesture-handler';
+import { RecoilRoot } from "recoil";
 
 export default function App() {
   const landscape = async () => {
@@ -17,7 +18,9 @@ export default function App() {
   }, []);
   return (
     <GluestackUIProvider config={config} >
+          <RecoilRoot>
       <MainRoute />
+      </RecoilRoot>
     </GluestackUIProvider>
   );
 }

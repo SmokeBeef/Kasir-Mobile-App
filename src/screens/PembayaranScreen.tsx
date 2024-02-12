@@ -9,6 +9,8 @@ import axios, { AxiosError } from 'axios'
 import { pemesananCreateResponse } from '../types/response'
 import { ActivityIndicator } from 'react-native'
 import { axiosInterceptor } from '../utils/axiosInterceptor'
+import { useResetRecoilState ,useSetRecoilState} from 'recoil';
+import { cartState } from '../store/cartStore'
 
 interface form {
   customer_name: string,
@@ -25,6 +27,9 @@ export default function Pembayaran() {
 
   const [kasir, setKasir] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
+  const resetCartState = useResetRecoilState(cartState);
+  const setCart = useSetRecoilState(cartState);
+
 
   const getKasir = async () => {
     const getToken = getItem('token');
@@ -75,7 +80,12 @@ export default function Pembayaran() {
       alert(response.data.message)
 
       setLoading(false)
+      
       navigate.goBack()
+      setCart({
+        items: [],
+        totalPrice: 0
+      });
 
     } catch (error) {
       console.log(error);
@@ -95,6 +105,7 @@ export default function Pembayaran() {
   }, [])
 
   return (
+
     <ScrollView >
       <VStack flex={1} bgColor='$orange50' justifyContent='center' alignItems='center'>
 
@@ -115,7 +126,7 @@ export default function Pembayaran() {
           <VStack>
             <Text>Nominal Tunai</Text>
             <Input aria-label='numeric' >
-              <InputField onChangeText={(val) => onChange(val, 'payment')} keyboardType='numeric' placeholder='nama pelanggan' />
+              <InputField onChangeText={(val) => onChange(val, 'payment')} keyboardType='numeric' placeholder='masukkan nominal uang' />
             </Input>
           </VStack>
           <VStack>
@@ -133,5 +144,6 @@ export default function Pembayaran() {
         </Box>
       </VStack>
     </ScrollView>
+
   )
 }

@@ -15,7 +15,8 @@ import { currency } from "../../utils/currency";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { cartState } from "../../store/cartStore";
 import { cartItem, menu } from "../../types";
-import { useFonts } from "expo-font";
+import { useFonts  } from "expo-font";
+import AppLoading from "expo-app-loading";
 
 interface props {
   data: menu;
@@ -35,6 +36,10 @@ const Card = ({ data }: props) => {
     'PTSerif-Bold' : require('../../../assets/font/PTSerif-Bold.ttf')
 
   })
+
+  if (!fontsLoaded){
+    return <AppLoading/>
+  }
 
   const addItem = () => {
     setCart((cart) => {
