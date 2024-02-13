@@ -28,7 +28,7 @@ const MainRoute = () => {
         screenOptions={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           headerStyle: {
-            backgroundColor: "#fb923c",
+            backgroundColor: "orange",
           },
           headerBackTitleStyle: {
             color: "white"

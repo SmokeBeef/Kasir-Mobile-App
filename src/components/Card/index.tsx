@@ -33,7 +33,10 @@ const Card = ({ data }: props) => {
 
   let [fontsLoaded] = useFonts({
     'PTSerifReg' : require('../../../assets/font/PTSerif-Regular.ttf'),
-    'PTSerif-Bold' : require('../../../assets/font/PTSerif-Bold.ttf')
+    'PTSerif-Bold' : require('../../../assets/font/PTSerif-Bold.ttf'),
+    'Latoblack' : require('../../../assets/font/lato/Lato-Black.ttf'),
+    'Latoreg' : require('../../../assets/font/lato/Lato-Regular.ttf'),
+
 
   })
 
@@ -143,8 +146,8 @@ const Card = ({ data }: props) => {
             color: "black", // Atur warna teks menjadi hitam
           }}
           size="md"
-          fontFamily="PTSerif-Bold"
-        >
+          fontFamily="Latoblack" // Perbaiki di sini
+                  >
           {data.name.charAt(0).toUpperCase() + data.name.slice(1)}
         </Text>
         <Text
@@ -153,6 +156,8 @@ const Card = ({ data }: props) => {
             _dark: { color: "$textLight200" },
           }}
           fontSize="$sm"
+          fontFamily="Latoreg" // Perbaiki di sini
+
         >
           {data.description}
         </Text>
@@ -164,6 +169,8 @@ const Card = ({ data }: props) => {
             color: "black",
           }}
           fontSize="$xs"
+          fontFamily="Latoreg" // Perbaiki di sini
+
         >
           {currency.format(data.price)}
         </Text>

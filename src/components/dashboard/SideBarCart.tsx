@@ -26,6 +26,9 @@ import {
   HStack,
   Heading,
 } from '@gluestack-ui/themed';
+import { useFonts  } from "expo-font";
+import AppLoading from "expo-app-loading";
+
 
 
 export default function SideBarCart() {
@@ -57,6 +60,17 @@ export default function SideBarCart() {
   const price = currency.format(totalPrice);
   const [showAlertDialog, setShowAlertDialog] = React.useState(false)
 
+  let [fontsLoaded] = useFonts({
+    'Latoblack' : require('../../../assets/font/lato/Lato-Black.ttf'),
+    'Latoreg' : require('../../../assets/font/lato/Lato-Regular.ttf'),
+
+
+  })
+
+  if (!fontsLoaded){
+    return <AppLoading/>
+  }
+
   return (
     <>
           <AlertDialog
@@ -71,11 +85,11 @@ export default function SideBarCart() {
           <AlertDialogHeader borderBottomWidth="$0">
             <HStack space="sm" alignItems="center">
               {/* <Icon as={AlertTriangleIcon} color="$error700" /> */}
-              <Heading size="lg">Lanjut ke Pembayaran</Heading>
+              <Heading size="lg" >Lanjut ke Pembayaran?</Heading>
             </HStack>
           </AlertDialogHeader>
           <AlertDialogBody>
-            <Text>
+            <Text fontFamily="Latoreg">
               Pembayaran menggunakan Tunai
             </Text>
           </AlertDialogBody>
@@ -88,7 +102,7 @@ export default function SideBarCart() {
                   setShowAlertDialog(false)
                 }}
               >
-                <ButtonText fontSizes="$md">Close</ButtonText>
+                <Text >Close</Text>
               </Button>
               <Button
                 action="primary"
@@ -120,9 +134,9 @@ export default function SideBarCart() {
           flexDirection="row"
           justifyContent="space-between"
         >
-          <Text flex={1}>Nama</Text>
-          <Text flex={1}>Qty</Text>
-          <Text flex={1}>Total</Text>
+          <Text fontFamily="Latoreg" flex={1}>Nama</Text>
+          <Text fontFamily="Latoreg" flex={1}>Qty</Text>
+          <Text fontFamily="Latoreg" flex={1}>Total</Text>
         </View>
         <FlatList
           data={items}
@@ -140,11 +154,11 @@ export default function SideBarCart() {
                 mb={10}
                 mt={10}
               >
-                <Text flex={1}>
+                <Text fontFamily="Latoreg" flex={1}>
                   {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
                 </Text>
-                <Text flex={1}>{item.total}</Text>
-                <Text flex={1}>{total}</Text>
+                <Text fontFamily="Latoreg" flex={1}>{item.total}</Text>
+                <Text fontFamily="Latoreg" flex={1}>{total}</Text>
               </View>
             );
           }}
@@ -158,10 +172,10 @@ export default function SideBarCart() {
           borderTopWidth={2}
           borderColor="orange"
         >
-          <Text color="black" fontWeight="bold">
+          <Text color="black" fontFamily="Latoblack">
             Final Total :
           </Text>
-          <Text>{price}</Text>
+          <Text fontFamily="Latoreg">{price}</Text>
         </View>
 
         <Button $active-bg="$orange500" bgColor="$orange" onPress={() => setShowAlertDialog(true)}
