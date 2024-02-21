@@ -1,13 +1,13 @@
 {
   "expo": {
     "name": "kasir_tab",
-    "slug": "kasir",
+    "slug": "kasirtab",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/CashierIcon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/Cashier.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/CashierIcon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.risha.kasir"
@@ -33,8 +33,12 @@
         {
           "initialOrientation": "LANDSCAPE"
         }
-      ],
-      
-    ]
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e8f6caff-b2c5-4a3f-9b8b-09b9a49d5974"
+      }
+    }
   }
 }

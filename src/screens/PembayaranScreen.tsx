@@ -61,13 +61,11 @@ export default function Pembayaran() {
 
   const [kasir, setKasir] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const resetCartState = useResetRecoilState(cartState);
-  const setCart = useSetRecoilState(cartState);
   const [showAlertDialog, setShowAlertDialog] = React.useState(false);
+  const setCart = useSetRecoilState(cartState);
 
   const getKasir = async () => {
     const getToken = getItem("token");
-    console.log(route.params.data);
 
     const getName = getItem("name");
     const [username, token] = await Promise.all([getName, getToken]);
@@ -76,6 +74,7 @@ export default function Pembayaran() {
 
     if (token) setToken(token);
   };
+
   const onChange = (text: string, column: "name" | "payment") => {
     if (column === "name") {
       setForm({ ...form, customer_name: text });
@@ -112,11 +111,8 @@ export default function Pembayaran() {
         }
       );
 
-      // alert(response.data.message)
       setShowAlertDialog(true);
       setLoading(false);
-
-      // navigate.goBack()
     } catch (error) {
       console.log(error);
 
@@ -127,6 +123,9 @@ export default function Pembayaran() {
 
       setLoading(false);
       // alert('error')
+    } finally {
+      setCart({ items: [], totalPrice: 0 });
+      setLoading(false);
     }
   };
 
@@ -148,7 +147,7 @@ export default function Pembayaran() {
       <AlertDialog
         isOpen={showAlertDialog}
         onClose={() => {
-          setShowAlertDialog(false)
+          setShowAlertDialog(false);
           navigate.navigate("dashboard");
         }}
       >
@@ -174,10 +173,7 @@ export default function Pembayaran() {
               mr="$3"
               onPress={() => {
                 setShowAlertDialog(false);
-                setCart({
-                  items: [],
-                  totalPrice: 0,
-                });
+
                 navigate.navigate("dashboard");
               }}
             >
@@ -204,11 +200,11 @@ export default function Pembayaran() {
             gap={"$4"}
           >
             <Text fontFamily="Latoblack" textAlign="center" fontSize={20}>
-              Pembayaran
+              Payment
             </Text>
             <VStack>
               <Text fontFamily="Latoreg" mb={"$1"}>
-                Nama Kasir
+              Cashier name
               </Text>
               <Input isReadOnly variant="outline">
                 <InputField placeholder="username" value={kasir} />
@@ -216,30 +212,30 @@ export default function Pembayaran() {
             </VStack>
             <VStack>
               <Text fontFamily="Latoreg" mb={"$1"}>
-                Nama Pelanggan
+              Customer name
               </Text>
               <Input>
                 <InputField
                   onChangeText={(val) => onChange(val, "name")}
-                  placeholder="masukkan nama pelanggan"
+                  placeholder="Enter the customer name"
                 />
               </Input>
             </VStack>
             <VStack>
               <Text fontFamily="Latoreg" mb={"$1"}>
-                Nominal Tunai
+                Nominal cash
               </Text>
               <Input aria-label="numeric">
                 <InputField
                   onChangeText={(val) => onChange(val, "payment")}
                   keyboardType="numeric"
-                  placeholder="masukkan nominal uang"
+                  placeholder="Enter the nominal"
                 />
               </Input>
             </VStack>
             <VStack>
               <Text fontFamily="Latoreg" mb={"$1"}>
-                Total Belanja
+                Final Total 
               </Text>
               <Input isReadOnly aria-label="numeric">
                 <InputField

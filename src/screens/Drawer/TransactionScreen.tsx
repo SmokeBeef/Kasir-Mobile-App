@@ -22,6 +22,8 @@ import { getItem } from "../../utils/storage";
 import { useGestureHandlerRef } from "@react-navigation/stack";
 import { currency } from '../../utils/currency';
 import { axiosInterceptor } from "../../utils/axiosInterceptor";
+import { useFonts } from "expo-font";
+import AppLoading from "expo-app-loading";
 
 export default function TransactionScreen() {
 
@@ -133,23 +135,31 @@ export default function TransactionScreen() {
   }, [])
 
 
+ let [fontsLoaded] = useFonts({
+    Latoblack: require("../../../assets/font/lato/Lato-Black.ttf"),
+    Latoreg: require("../../../assets/font/lato/Lato-Regular.ttf"),
+  });
 
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+  
 
   const RenderItem = ({ item, index }: ListRenderItemInfo<pemesananDetail>) => {
     return (
       <View bgColor="white" style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 16, paddingVertical: 8, paddingHorizontal: 12 }} >
 
-        <Text flex={0.3}>{index + 1}</Text>
-        <Text flex={1}>{item.id}</Text>
-        <Text flex={1}>{item.customer_name}</Text>
-        <Text flex={1}>{currency.format(item.total)}</Text>
-        <Text flex={1}>{dateFormarter(item.created_at)}</Text>
+        {/* <Text flex={0.3}>{index + 1}</Text> */}
+        <Text flex={1} fontFamily="Latoreg">{item.id}</Text>
+        <Text flex={1} fontFamily="Latoreg">{item.customer_name}</Text>
+        <Text flex={1} fontFamily="Latoreg">{currency.format(item.total)}</Text>
+        <Text flex={1} fontFamily="Latoreg">{dateFormarter(item.created_at)}</Text>
         <Button
           variant="link"
           onPress={() => navigate.navigate("detail", { id: item.id })}
-          flex={0.3}
+          flex={1}
         >
-          <ButtonText textAlign="left">
+          <ButtonText textAlign="left" fontFamily="Latoblack" bgColor="orange" py={8} px={10} color="white" borderRadius={5}>
             Detail
           </ButtonText>
         </Button>
@@ -158,18 +168,21 @@ export default function TransactionScreen() {
     )
   }
 
+ 
+
   return (
-    <VStack flex={1} bgColor="$orange100">
+    
+    <VStack flex={1} bgColor="$orange100" pt={10} pb={10}>
       {/* <HStack w={"$full"}>
         <Text bgColor="$orange400" color="$white" w={"$full"} >Transaction List</Text>
       </HStack> */}
-      <HStack bgColor="$orange500" mx={"$4"} px={"$4"} py={"$2"} justifyContent="space-between">
-        <Text flex={0.3} color="$white">No</Text>
-        <Text flex={1} color="$white">No Transaksi</Text>
-        <Text flex={1} color="$white">Customer Name</Text>
-        <Text flex={1} color="$white">Total</Text>
-        <Text flex={1} color="$white">Date Transaction</Text>
-        <Text flex={0.3} color="$white" >Action</Text>
+      <HStack bgColor="#9D5C0D" mx={"$4"} px={"$4"} py={"$2"} justifyContent="space-between" borderTopEndRadius={10} borderTopStartRadius={10} alignItems="center">
+        {/* <Text flex={0.3} color="$white">No</Text> */}
+        <Text flex={1} color="$white" fontFamily="Latoblack">No Transaksi</Text>
+        <Text flex={1} color="$white" fontFamily="Latoblack">Customer Name</Text>
+        <Text flex={1} color="$white" fontFamily="Latoblack">Total</Text>
+        <Text flex={1} color="$white" fontFamily="Latoblack">Date Transaction</Text>
+        <Text flex={1} color="$white" fontFamily="Latoblack" textAlign="center">Action</Text>
       </HStack>
       <FlashList
         data={data}

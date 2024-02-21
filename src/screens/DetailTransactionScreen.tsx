@@ -9,6 +9,8 @@ import { AxiosError, AxiosRequestConfig } from "axios";
 import { ActivityIndicator } from "react-native";
 import { dateFormarter } from "../utils/dateFormat";
 import { currency } from "../utils/currency";
+import { useFonts } from "expo-font";
+import AppLoading from "expo-app-loading";
 import { ScrollView } from "react-native";
 
 const DetailTransactionScreen = () => {
@@ -51,9 +53,18 @@ const DetailTransactionScreen = () => {
     getData();
   }, [isFocused]);
 
+  let [fontsLoaded] = useFonts({
+    Latoblack: require("../../assets/font/lato/Lato-Black.ttf"),
+    Latoreg: require("../../assets/font/lato/Lato-Regular.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
   return (
-    <ScrollView>
-      <VStack bgColor="$orange100" pt={"$4"} flex={1} alignItems="center">
+    <ScrollView style={{backgroundColor:"#ffedd5" }}>
+      <VStack bgColor="$orange100" pt={"$4"} flex={1} alignItems="center" pb={10} >
         {loading ? (
           <ActivityIndicator color={"black"} size={"large"} />
         ) : data ? (
@@ -64,59 +75,60 @@ const DetailTransactionScreen = () => {
             borderRadius={"$md"}
             borderWidth={"$1"}
             borderColor="$trueGray300"
+            
           >
-            <Text size="3xl" mb={"$4"}>
-              Detail Pemesanan
+            <Text size="3xl" mb={"$4"} fontFamily="Latoblack">
+              Detail Transaction
             </Text>
             <HStack>
-              <Text flex={1}>Nomor Pesanan : </Text>
-              <Text flex={1}>{data.id}</Text>
+              <Text flex={1} fontFamily="Latoreg">No Transaction : </Text>
+              <Text flex={1} fontFamily="Latoreg">{data.id}</Text>
             </HStack>
             <HStack>
-              <Text flex={1}>Tgl Pemesanan : </Text>
-              <Text flex={1}>{dateFormarter(data.created_at)}</Text>
+              <Text flex={1} fontFamily="Latoreg">Date : </Text>
+              <Text flex={1} fontFamily="Latoreg">{dateFormarter(data.created_at)}</Text>
             </HStack>
             <HStack>
-              <Text flex={1}>Nama Customer : </Text>
-              <Text flex={1}>{data.customer_name}</Text>
+              <Text flex={1} fontFamily="Latoreg">Customer Name: </Text>
+              <Text flex={1} fontFamily="Latoreg">{data.customer_name}</Text>
             </HStack>
             <HStack>
-              <Text flex={1}>Nama Kasir : </Text>
-              <Text flex={1}>{data.user_name}</Text>
+              <Text flex={1} fontFamily="Latoreg">Cashier Name : </Text>
+              <Text flex={1} fontFamily="Latoreg">{data.user_name}</Text>
             </HStack>
-            <Text my={"$4"}>Pesanan</Text>
-            <HStack>
-              <Text flex={1}>nama menu </Text>
-              <Text flex={1}>qty</Text>
-              <Text flex={1}>total harga</Text>
+            <Text my={"$4"} fontFamily="Latoreg">List Order :</Text>
+            <HStack pb={5}>
+              <Text flex={1} fontFamily="Latoreg">Menu </Text>
+              <Text flex={1} fontFamily="Latoreg">qty</Text>
+              <Text flex={1} fontFamily="Latoreg">Total Price</Text>
             </HStack>
-            <Divider my={"$2"} />
+            {/* <Divider my={"$2"} /> */}
             <VStack gap={"$2"}>
               {data.detailPemesanan.map((val) => (
                 <HStack>
-                  <Text flex={1}>{val.menu_name}</Text>
-                  <Text flex={1}>{val.qty}</Text>
-                  <Text flex={1}>{currency.format(val.total)}</Text>
+                  <Text flex={1} fontFamily="Latoreg">{val.menu_name}</Text>
+                  <Text flex={1} fontFamily="Latoreg">{val.qty}</Text>
+                  <Text flex={1} fontFamily="Latoreg">{currency.format(val.total)}</Text>
                 </HStack>
               ))}
             </VStack>
             <Divider my={"$4"} />
             <VStack gap={"$2"}>
               <HStack>
-                <Text flex={1}>Total</Text>
+                <Text flex={1} fontFamily="Latoreg">Total</Text>
                 <Text flex={1}></Text>
-                <Text flex={1}>{currency.format(data.total)}</Text>
+                <Text flex={1} fontFamily="Latoblack">{currency.format(data.total)}</Text>
               </HStack>
               <HStack>
-                <Text flex={1}>Bayar Tunai</Text>
+                <Text flex={1} fontFamily="Latoreg">Payment</Text>
                 <Text flex={1}></Text>
-                <Text flex={1}>{currency.format(data.total_payment)}</Text>
+                <Text flex={1} fontFamily="Latoreg">{currency.format(data.total_payment)}</Text>
               </HStack>
               <Divider />
               <HStack>
-                <Text flex={1}>Kembalian</Text>
+                <Text flex={1} fontFamily="Latoreg">Change Money</Text>
                 <Text flex={1}></Text>
-                <Text flex={1}>
+                <Text flex={1} fontFamily="Latoreg">
                   {currency.format(data.total_payment - data.total)}
                 </Text>
               </HStack>

@@ -1,5 +1,5 @@
 import { View, Text } from "@gluestack-ui/themed";
-import React, { useCallback, useEffect, useState } from "react";
+// import React, { useCallback, useEffect, useState } from "react";
 import Entypo from "@expo/vector-icons/Entypo";
 
 export default function SplashScreen() {
