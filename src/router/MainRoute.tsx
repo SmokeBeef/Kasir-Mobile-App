@@ -25,6 +25,7 @@ const MainRoute = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
+      
         screenOptions={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           headerStyle: {

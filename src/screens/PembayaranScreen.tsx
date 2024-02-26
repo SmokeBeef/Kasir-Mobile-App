@@ -182,6 +182,7 @@ export default function Pembayaran() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
       <ScrollView>
         <VStack
           flex={1}
@@ -259,6 +260,7 @@ export default function Pembayaran() {
           </Box>
         </VStack>
       </ScrollView>
+      
     </>
   );
 }
